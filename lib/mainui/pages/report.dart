@@ -8,7 +8,7 @@ class ReportPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('ReportPage'),
+        child: Text('ReportPage1'),
       ),
     );
   }
