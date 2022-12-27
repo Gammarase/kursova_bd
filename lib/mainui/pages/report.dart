@@ -24,6 +24,8 @@ class _ReportPageState extends State<ReportPage> {
   late var toDate = DateTime.parse(_expirationDate.text);
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
+  dynamic sumPrice = 0;
+  dynamic sumAmount = 0;
 
   @override
   void initState() {
@@ -52,7 +54,11 @@ class _ReportPageState extends State<ReportPage> {
                 ),
               ],
             ),
-            const Text('ReportPage'),
+            const Text('ReportPage',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -149,70 +155,6 @@ class _ReportPageState extends State<ReportPage> {
             const SizedBox(
               height: 10,
             ),
-            Table(
-              border: TableBorder.symmetric(
-                  inside: const BorderSide(width: 2, color: Colors.black)),
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: const [
-                TableRow(
-                    decoration: BoxDecoration(
-                      color: Color(0xFF6040E5),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10)),
-                    ),
-                    children: [
-                      Text(
-                        'name',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        'amount',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        'price',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        'dateOfReceipt',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        'expirationDate',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        'madeOf',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ]),
-              ],
-            ),
             FutureBuilder(
                 future: myFuture,
                 builder: (context, AsyncSnapshot<dynamic> snapshot) {
@@ -227,17 +169,159 @@ class _ReportPageState extends State<ReportPage> {
                       return const Text('Error');
                     }
                     if (snapshot.hasData && snapshot.data.length > 0) {
-
                       return RefreshIndicator(
                         key: _refreshIndicatorKey,
                         onRefresh: refresh,
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            // padding: const EdgeInsets.all(8),
-                            itemCount: namesProducts.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return createTable(namesProducts.length, index);
-                            }),
+                        child: Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Total amount: $sumAmount',
+                                  style: const TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Total price: $sumPrice',
+                                    style: const TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Table(
+                                border: TableBorder.symmetric(
+                                    inside: const BorderSide(
+                                        width: 2, color: Colors.black)),
+                                // defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                                children: const [
+                                  TableRow(
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF6040E5),
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                      ),
+                                      children: [
+                                        Text(
+                                          'name',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          'amount',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          'price',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ]),
+                                ],
+                              ),
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  itemCount: namesProducts.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return groupTable(
+                                        namesProducts.length, index);
+                                  }),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Table(
+                                border: TableBorder.symmetric(
+                                    inside: const BorderSide(
+                                        width: 2, color: Colors.black)),
+                                defaultVerticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                children: const [
+                                  TableRow(
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF6040E5),
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                      ),
+                                      children: [
+                                        Text(
+                                          'name',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          'amount',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          'price',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          'dateOfReceipt',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          'expirationDate',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          'madeOf',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ]),
+                                ],
+                              ),
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.zero,
+                                  itemCount: namesProducts.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return createTable(
+                                        namesProducts.length, index);
+                                  }),
+                            ],
+                          ),
                       );
                     }
                   }
@@ -251,7 +335,10 @@ class _ReportPageState extends State<ReportPage> {
 
   downloadList() {
     return Processing.getProductsByDate(
-            widget.currentuser.userId, DateFormat('yyyy-MM-dd').format(fromDate), DateFormat('yyyy-MM-dd').format(toDate)).then((value) {
+            widget.currentuser.userId,
+            DateFormat('yyyy-MM-dd').format(fromDate),
+            DateFormat('yyyy-MM-dd').format(toDate))
+        .then((value) {
       namesProducts = value;
 
       return namesProducts;
@@ -260,7 +347,9 @@ class _ReportPageState extends State<ReportPage> {
 
   Future refresh() async {
     final products = await Processing.getProductsByDate(
-            widget.currentuser.userId, DateFormat('yyyy-MM-dd').format(fromDate), DateFormat('yyyy-MM-dd').format(toDate))
+            widget.currentuser.userId,
+            DateFormat('yyyy-MM-dd').format(fromDate),
+            DateFormat('yyyy-MM-dd').format(toDate))
         .then((value) {
       namesProducts = value;
       return namesProducts;
@@ -273,23 +362,52 @@ class _ReportPageState extends State<ReportPage> {
 
   Widget createTable(lengthTable, index) {
     List<TableRow> rows = [];
-
+    sumAmount += namesProducts[index].amount;
+    sumPrice += namesProducts[index].price;
     // var itemFromDate = DateTime.parse(namesProducts[index].dateOfReceipt);
     // var itemToDate = DateTime.parse(namesProducts[index].expirationDate);
 
     //if (itemFromDate.isAfter(fromDate) && itemToDate.isBefore(toDate)) {
 
+    rows.add(TableRow(children: [
+      Text(
+        namesProducts[index].name,
+        textAlign: TextAlign.center,
+      ),
+      Text(
+        '${namesProducts[index].amount}',
+        textAlign: TextAlign.center,
+      ),
+      Text(
+        '${namesProducts[index].price}',
+        textAlign: TextAlign.center,
+      ),
+      Text(
+        '${namesProducts[index].dateOfReceipt}',
+        textAlign: TextAlign.center,
+      ),
+      Text(
+        '${namesProducts[index].expirationDate}',
+        textAlign: TextAlign.center,
+      ),
+      Text(
+        '${namesProducts[index].madeOf}',
+        textAlign: TextAlign.center,
+      ),
+    ]));
+
+    if ((lengthTable - 1) == index) {
       rows.add(TableRow(children: [
-        Text(
-          namesProducts[index].name,
+        const Text(
+          'All items',
           textAlign: TextAlign.center,
         ),
         Text(
-          '${namesProducts[index].amount}',
+          'sum amount ${sumAmount}',
           textAlign: TextAlign.center,
         ),
         Text(
-          '${namesProducts[index].price}',
+          'sum price ${sumPrice}',
           textAlign: TextAlign.center,
         ),
         Text(
@@ -305,6 +423,47 @@ class _ReportPageState extends State<ReportPage> {
           textAlign: TextAlign.center,
         ),
       ]));
+    }
+    //}
+    return Table(
+      border: TableBorder.all(),
+      children: rows,
+    );
+  }
+
+  Widget groupTable(lengthTable, index) {
+    List<TableRow> rows = [];
+    sumAmount += namesProducts[index].amount;
+    sumPrice += namesProducts[index].price;
+    // var itemFromDate = DateTime.parse(namesProducts[index].dateOfReceipt);
+    // var itemToDate = DateTime.parse(namesProducts[index].expirationDate);
+
+    //if (itemFromDate.isAfter(fromDate) && itemToDate.isBefore(toDate)) {
+
+    rows.add(TableRow(children: [
+      Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Text(
+          namesProducts[index].name,
+          textAlign: TextAlign.center,
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Text(
+          '${namesProducts[index].amount}',
+          textAlign: TextAlign.center,
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Text(
+          '${namesProducts[index].price}',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ]));
+
     //}
     return Table(
       border: TableBorder.all(),
